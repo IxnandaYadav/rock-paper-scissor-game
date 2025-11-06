@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock Paper Scissors Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 800px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .score-board {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            background: #3498db;
+            padding: 15px;
+            border-radius: 10px;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .score {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .score-title {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .score-value {
+            font-size: 2rem;
+        }
+
+        .choices {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .choice-btn {
+            background: #2c3e50;
+            color: white;
+            border: none;
+            padding: 20px;
+            font-size: 1.2rem;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .choice-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .choice-btn:active {
+            transform: translateY(0);
+        }
+
+        .rock { background: linear-gradient(135deg, #ff7e5f, #feb47b); }
+        .paper { background: linear-gradient(135deg, #8e9eab, #eef2f3); }
+        .scissors { background: linear-gradient(135deg, #ff416c, #ff4b2b); }
+
+        .choice-btn i {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .result-container {
+            margin: 30px 0;
+            min-height: 120px;
+        }
+
+        .result-message {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 20px 0;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .choices-display {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+
+        .player-choice, .computer-choice {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .choice-label {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .choice-icon {
+            font-size: 4rem;
+        }
+
+        .controls {
+            margin: 30px 0;
+        }
+
+        .btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:hover {
+            background: #2ecc71;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-restart {
+            background: #e74c3c;
+        }
+
+        .btn-restart:hover {
+            background: #c0392b;
+        }
+
+        .game-mode {
+            margin: 20px 0;
+        }
+
+        .mode-btn {
+            background: #9b59b6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 5px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .mode-btn.active {
+            background: #8e44ad;
+            box-shadow: 0 0 10px rgba(142, 68, 173, 0.5);
+        }
+
+        .win {
+            color: #27ae60;
+            animation: pulse 0.5s;
+        }
+
+        .lose {
+            color: #e74c3c;
+            animation: shake 0.5s;
+        }
+
+        .draw {
+            color: #f39c12;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            50% { transform: translateX(10px); }
+            75% { transform: translateX(-10px); }
+            100% { transform: translateX(0); }
+        }
+
+        .suspense {
+            opacity: 0.5;
+        }
+
+        @media (max-width: 600px) {
+            .choices {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .choice-btn {
+                width: 100px;
+                height: 100px;
+                padding: 15px;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Rock Paper Scissors</h1>
+        
+        <div class="score-board">
+            <div class="score">
+                <div class="score-title">PLAYER</div>
+                <div id="player-score" class="score-value">0</div>
+            </div>
+            <div class="score">
+                <div class="score-title">COMPUTER</div>
+                <div id="computer-score" class="score-value">0</div>
+            </div>
+        </div>
+        
+        <div class="game-mode">
+            <button id="best-of-3" class="mode-btn active">Best of 3</button>
+            <button id="best-of-5" class="mode-btn">Best of 5</button>
+        </div>
+        
+        <div class="choices">
+            <button class="choice-btn rock" id="rock">
+                <i>✊</i>
+                <span>Rock</span>
+            </button>
+            <button class="choice-btn paper" id="paper">
+                <i>✋</i>
+                <span>Paper</span>
+            </button>
+            <button class="choice-btn scissors" id="scissors">
+                <i>✌️</i>
+                <span>Scissors</span>
+            </button>
+        </div>
+        
+        <div class="result-container">
+            <div id="result-message" class="result-message">Choose your move!</div>
+            
+            <div class="choices-display">
+                <div class="player-choice">
+                    <div class="choice-label">You</div>
+                    <div id="player-choice-icon" class="choice-icon">❓</div>
+                </div>
+                <div class="computer-choice">
+                    <div class="choice-label">Computer</div>
+                    <div id="computer-choice-icon" class="choice-icon">❓</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="play-again" class="btn">Play Again</button>
+            <button id="restart" class="btn btn-restart">Restart Game</button>
+        </div>
+    </div>
+
+    <script>
+        // Game state
+        const gameState = {
+            playerScore: 0,
+            computerScore: 0,
+            gameMode: 'best-of-3', // 'best-of-3' or 'best-of-5'
+            roundsPlayed: 0,
+            gameOver: false
+        };
+
+        // DOM elements
+        const playerScoreEl = document.getElementById('player-score');
+        const computerScoreEl = document.getElementById('computer-score');
+        const resultMessageEl = document.getElementById('result-message');
+        const playerChoiceIconEl = document.getElementById('player-choice-icon');
+        const computerChoiceIconEl = document.getElementById('computer-choice-icon');
+        const playAgainBtn = document.getElementById('play-again');
+        const restartBtn = document.getElementById('restart');
+        const bestOf3Btn = document.getElementById('best-of-3');
+        const bestOf5Btn = document.getElementById('best-of-5');
+        const choiceButtons = document.querySelectorAll('.choice-btn');
+
+        // Choice mappings
+        const choices = {
+            rock: '✊',
+            paper: '✋',
+            scissors: '✌️'
+        };
+
+        // Add event listeners
+        choiceButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                if (!gameState.gameOver) {
+                    playRound(button.id);
+                }
+            });
+        });
+
+        playAgainBtn.addEventListener('click', resetRound);
+        restartBtn.addEventListener('click', restartGame);
+
+        bestOf3Btn.addEventListener('click', () => setGameMode('best-of-3'));
+        bestOf5Btn.addEventListener('click', () => setGameMode('best-of-5'));
+
+        // Set game mode
+        function setGameMode(mode) {
+            gameState.gameMode = mode;
+            bestOf3Btn.classList.toggle('active', mode === 'best-of-3');
+            bestOf5Btn.classList.toggle('active', mode === 'best-of-5');
+            restartGame();
+        }
+
+        // Computer makes a random choice
+        function getComputerChoice() {
+            const choicesArray = Object.keys(choices);
+            const randomIndex = Math.floor(Math.random() * choicesArray.length);
+            return choicesArray[randomIndex];
+        }
+
+        // Determine winner
+        function determineWinner(playerChoice, computerChoice) {
+            if (playerChoice === computerChoice) {
+                return 'draw';
+            }
+            
+            if (
+                (playerChoice === 'rock' && computerChoice === 'scissors') ||
+                (playerChoice === 'paper' && computerChoice === 'rock') ||
+                (playerChoice === 'scissors' && computerChoice === 'paper')
+            ) {
+                return 'player';
+            }
+            
+            return 'computer';
+        }
+
+        // Play a round
+        function playRound(playerChoice) {
+            // Disable buttons during suspense
+            choiceButtons.forEach(btn => btn.disabled = true);
+            
+            // Show player choice immediately
+            playerChoiceIconEl.textContent = choices[playerChoice];
+            
+            // Show suspense for computer choice
+            computerChoiceIconEl.textContent = '❓';
+            computerChoiceIconEl.classList.add('suspense');
+            resultMessageEl.textContent = 'Thinking...';
+            
+            // Add delay for suspense before revealing computer's choice
+            setTimeout(() => {
+                const computerChoice = getComputerChoice();
+                computerChoiceIconEl.textContent = choices[computerChoice];
+                computerChoiceIconEl.classList.remove('suspense');
+                
+                const winner = determineWinner(playerChoice, computerChoice);
+                updateScore(winner);
+                displayResult(winner, playerChoice, computerChoice);
+                
+                gameState.roundsPlayed++;
+                
+                // Check if game is over
+                checkGameOver();
+                
+                // Re-enable buttons
+                choiceButtons.forEach(btn => btn.disabled = false);
+            }, 1000);
+        }
+
+        // Update score
+        function updateScore(winner) {
+            if (winner === 'player') {
+                gameState.playerScore++;
+                playerScoreEl.textContent = gameState.playerScore;
+            } else if (winner === 'computer') {
+                gameState.computerScore++;
+                computerScoreEl.textContent = gameState.computerScore;
+            }
+        }
+
+        // Display result
+        function displayResult(winner, playerChoice, computerChoice) {
+            let message = '';
+            
+            if (winner === 'draw') {
+                message = `It's a draw! Both chose ${playerChoice}.`;
+                resultMessageEl.className = 'result-message draw';
+            } else if (winner === 'player') {
+                message = `You win! ${playerChoice} beats ${computerChoice}.`;
+                resultMessageEl.className = 'result-message win';
+            } else {
+                message = `You lose! ${computerChoice} beats ${playerChoice}.`;
+                resultMessageEl.className = 'result-message lose';
+            }
+            
+            resultMessageEl.textContent = message;
+        }
+
+        // Check if game is over
+        function checkGameOver() {
+            const maxRounds = gameState.gameMode === 'best-of-3' ? 3 : 5;
+            const roundsNeededToWin = Math.ceil(maxRounds / 2);
+            
+            if (gameState.playerScore >= roundsNeededToWin || gameState.computerScore >= roundsNeededToWin) {
+                gameState.gameOver = true;
+                
+                let finalMessage = '';
+                if (gameState.playerScore > gameState.computerScore) {
+                    finalMessage = '🎉 Congratulations! You won the game! 🎉';
+                } else {
+                    finalMessage = '😞 Sorry! The computer won the game! 😞';
+                }
+                
+                setTimeout(() => {
+                    resultMessageEl.innerHTML = `${finalMessage}<br>Final Score: You ${gameState.playerScore} - ${gameState.computerScore} Computer`;
+                    resultMessageEl.className = 'result-message';
+                }, 1500);
+            }
+        }
+
+        // Reset round
+        function resetRound() {
+            playerChoiceIconEl.textContent = '❓';
+            computerChoiceIconEl.textContent = '❓';
+            resultMessageEl.textContent = 'Choose your move!';
+            resultMessageEl.className = 'result-message';
+        }
+
+        // Restart game
+        function restartGame() {
+            gameState.playerScore = 0;
+            gameState.computerScore = 0;
+            gameState.roundsPlayed = 0;
+            gameState.gameOver = false;
+            
+            playerScoreEl.textContent = '0';
+            computerScoreEl.textContent = '0';
+            resetRound();
+            
+            // Re-enable buttons
+            choiceButtons.forEach(btn => btn.disabled = false);
+        }
+    </script>
+</body>
+</html>
